@@ -1,10 +1,9 @@
 pipeline {
     agent any
     triggers {
-       // poll repo every 2 minute for changes
+       // poll repo every minute for changes
        pollSCM('* * * * *')
     }
-    properties([pipelineTriggers([pollSCM('* * * * *')])])
     stages {
         stage('Checkout Source') {
             steps {
