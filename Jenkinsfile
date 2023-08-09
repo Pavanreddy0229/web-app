@@ -25,7 +25,6 @@ pipeline {
                 sh '''cd terraform-config && terraform init'''
             }
         }
-
         stage('Terraform plan') {
             steps {
                 sh '''cd terraform-config && terraform plan'''
