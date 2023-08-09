@@ -12,7 +12,7 @@ pipeline {
         }
         stage('Test') {
             steps {
-                sh '''who am i'''
+                sh '''whoami'''
             }
         }
         stage('Build') {
