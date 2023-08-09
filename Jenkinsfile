@@ -20,5 +20,11 @@ pipeline {
                 sh '''npm install node index.js'''
             }
         }
+        stage('Terraform init') {
+            steps {
+                sh '''cd terraform-config && terraform init'''
+            }
+        }
+        
     }
 }
