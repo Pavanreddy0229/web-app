@@ -2,7 +2,7 @@ var express = require('express');
 
 var app = express();
 
-const PORT = process.env.SERVER_PORT;
+const PORT = 80;
 
 app.get('/', function (req, res) {
   res.send('Simple Web Application is UP');
