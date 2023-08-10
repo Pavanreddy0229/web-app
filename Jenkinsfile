@@ -20,6 +20,16 @@ pipeline {
                 sh '''npm install node index.js'''
             }
         }
+         stage('Deploy to staging') {
+            steps {
+                sh '''whoami'''
+            }
+        }
+         stage('Deploy to production') {
+            steps {
+                sh '''whoami'''
+            }
+        }
         stage('Terraform init') {
             steps {
                 sh '''cd terraform-config && terraform init'''
