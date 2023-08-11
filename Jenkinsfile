@@ -18,6 +18,8 @@ pipeline {
         stage('Build') {
             steps {
                 sh '''npm install node index.js'''
+                sh '''cd terraform-config && terraform init'''
+                sh '''cd terraform-config && terraform plan'''
             }
         }
          stage('Deploy to staging') {
@@ -29,17 +31,6 @@ pipeline {
             steps {
                 sh '''whoami'''
             }
-        }
-        stage('Terraform init') {
-            steps {
-                sh '''cd terraform-config && terraform init'''
-            }
-        }
-        stage('Terraform plan') {
-            steps {
-                sh '''cd terraform-config && terraform plan'''
-            }
-        }
-        
+        } 
     }
 }
