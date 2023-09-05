@@ -17,19 +17,20 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh '''npm install node index.js'''
-            }
-        }
-        stage('Terraform init') {
-            steps {
+                sh '''cd ansible/roles && ansible-playbook ami.yml'''
                 sh '''cd terraform-config && terraform init'''
-            }
-        }
-        stage('Terraform plan') {
-            steps {
                 sh '''cd terraform-config && terraform plan'''
             }
         }
-        
+         stage('Deploy to staging') {
+            steps {
+                sh '''whoami'''
+            }
+        }
+         stage('Deploy to production') {
+            steps {
+                sh '''whoami'''
+            }
+        } 
     }
 }

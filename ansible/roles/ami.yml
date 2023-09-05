@@ -1,0 +1,159 @@
+- name: Create EC2 Instance in New VPC
+  hosts: localhost
+  gather_facts: False
+  vars:
+    aws_region: "us-west-1"
+    instance_type: "t3.micro"
+    ami_id: "ami-0f8e81a3da6e2510a"
+
+  tasks:
+    - name: Create VPC
+      ec2_vpc_net:
+        name: my-vpc
+        cidr_block: 10.0.0.0/24
+        region: "{{ aws_region }}"
+      register: vpc
+
+    - name: Create Subnet
+      ec2_vpc_subnet:
+        vpc_id: "{{ vpc.vpc.id }}"
+        cidr: 10.0.0.0/26
+        region: "{{ aws_region }}"
+      register: subnet
+
+    - name: create internet gateway (IGW)
+      ec2_vpc_igw:
+        vpc_id: "{{ vpc.vpc.id }}"
+        region: "{{ aws_region }}"
+      register: igw
+
+    - name: debug
+      debug:
+        var: igw
+    # - name: Attach IGW to VPC
+    #   ec2_vpc_igw:
+    #     vpc_id: "{{ vpc.vpc.id }}"
+    #     region: "{{ aws_region }}"
+    #     state: present
+
+    - name: create route table
+      ec2_vpc_route_table:
+        vpc_id: "{{ vpc.vpc.id }}"
+        region: "{{ aws_region }}"
+        subnets:
+          - "{{subnet.subnet.id}}"
+        routes:
+          - dest: 0.0.0.0/0
+            gateway_id: "{{igw.gateway_id}}"
+          - dest: ::/0
+            gateway_id: "{{igw.gateway_id}}"
+      register: route_table
+
+    # - name: Associate route table with subnet
+    #   ec2_vpc_subnet_route_table:
+    #     subnet_id: "{{subnet.subnet.id}}"
+    #     route_table_id: "{{route_table.route_table.id}}"
+    #     region: "{{ aws_region }}"
+
+    # - name: add route to internet gateway
+    #   ec2_vpc_route:
+    #     route_table_id: "{{route_table.route_table.id}}"
+    #     dest_cidr_block: "0.0.0.0/0"
+    #     gateway_id: "{{igw.internetgateway.id}}"
+
+    - name: Create Security Group
+      ec2_group:
+        name: my-instance-sg
+        description: Security group for EC2 instance
+        region: "{{ aws_region }}"
+        vpc_id: "{{ vpc.vpc.id }}"
+        rules:
+          - proto: tcp
+            from_port: 22
+            to_port: 22
+            cidr_ip: 0.0.0.0/0
+      register: security_group
+
+    - name: Launch EC2 instance
+      ec2_instance:
+        name: "AMI-instance"
+        key_name: "asg_key"
+        instance_type: "{{ instance_type }}"
+        image_id: "{{ ami_id }}"
+        vpc_subnet_id: "{{ subnet.subnet.id }}"
+        security_group: "{{ security_group.group_id }}"
+        wait: yes
+        count: 1
+        network: 
+          assign_public_ip: yes
+      register: ec2_instance
+
+    - name: debug
+      debug:
+        var: ec2_instance
+
+    # - set_fact:
+    #     private_dns_name: "{{ec2_instance.instances[0].private_dns_name}}"
+
+    - name: wait for SSH to become available
+      wait_for:
+        host: "{{ec2_instance.instances[0].public_ip_address}}"
+        port: 22
+        delay: 30
+        timeout: 300
+
+    - name: Add instances to hosts
+      add_host:
+        name: "{{item.public_ip_address}}"
+        groups: ami_instance
+      loop: "{{ec2_instance.instances}}"
+
+- name: Install prerequisites and Deploy Application
+  become: yes
+  gather_facts: yes
+  hosts: ami_instance
+
+  tasks:
+    - name: Update apt repo and cache
+      apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
+    - name: Install nodejs and npm
+      apt:
+        pkg:
+          - nodejs
+          - npm
+    - name: copy the nodejs file
+      copy:
+        src: /home/ubuntu/web-app/ansible/nodejs-app
+        dest: /home/ubuntu
+    - name: Install npm dependencies
+      npm:
+        path: /home/ubuntu/nodejs-app
+    - name: Start the nodejs application
+      command:
+        chdir: /home/ubuntu/nodejs-app
+        cmd: node index.js
+      async: 1000
+      poll: 0
+
+- name: Create AMI and terminate instance
+  hosts: localhost
+  gather_facts: true
+
+  tasks:
+    - name: Create Image (AMI)
+      ec2_ami:
+        instance_id: "{{ec2_instance.instances[0].instance_id}}"
+        name: Node-App-{{ansible_date_time.epoch}}
+        wait: yes
+      register: ami_info
+
+    - name: Save AMI ID
+      copy:
+        content: "{{ami_info.image_id}}"
+        dest: /home/ubuntu/aws-pfp/ami.txt
+
+    - name: Terminate ec2 Instance
+      ec2_instance:
+        instance_ids: "{{ec2_instance.instance_ids}}"
+        state: "absent"
+
