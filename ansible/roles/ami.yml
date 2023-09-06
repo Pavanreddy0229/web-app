@@ -45,8 +45,8 @@
         routes:
           - dest: 0.0.0.0/0
             gateway_id: "{{igw.gateway_id}}"
-          - dest: ::/0
-            gateway_id: "{{igw.gateway_id}}"
+          # - dest: ::/0
+          #   gateway_id: "{{igw.gateway_id}}"
       register: route_table
 
     # - name: Associate route table with subnet
