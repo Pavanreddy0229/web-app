@@ -17,7 +17,11 @@ pipeline {
         }
         stage('Build') {
             steps {
+<<<<<<< HEAD
                 sh '''npm install node index.js'''
+=======
+                sh '''cd ansible/roles && ansible-playbook ami.yml'''
+>>>>>>> 6dd50fc (updated repo)
                 sh '''cd terraform-config && terraform init'''
                 sh '''cd terraform-config && terraform plan'''
             }
