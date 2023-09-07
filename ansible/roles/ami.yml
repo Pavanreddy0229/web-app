@@ -123,7 +123,7 @@
           - npm
     - name: copy the nodejs file
       copy:
-        src: web-app/ansible/roles/nodejs-app
+        src: /home/ubuntu/web-app/ansible/roles/nodejs-app
         dest: /home/ubuntu
     - name: Install npm dependencies
       npm:
