@@ -150,7 +150,7 @@
     - name: Save AMI ID
       copy:
         content: "{{ami_info.image_id}}"
-        dest: ami.txt
+        dest: ../../ami.txt
 
     - name: Terminate ec2 Instance
       ec2_instance:
