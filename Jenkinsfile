@@ -22,7 +22,9 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh '''cd ansible/roles && ansible-playbook ami.yml'''
+                withEnv(["AWS_REGION=us-west-1"]) {
+                    sh '''cd ansible/roles && ansible-playbook ami.yml'''
+                }
                 sh '''cd terraform-config && terraform init'''
                 sh '''cd terraform-config && terraform plan'''
             }
