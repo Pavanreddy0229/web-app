@@ -13,6 +13,8 @@ pipeline {
         stage('Test') {
             steps {
                 sh '''whoami'''
+                sh '''pwd'''
+                sh '''ls -R'''
             }
         }
         stage('Build') {
