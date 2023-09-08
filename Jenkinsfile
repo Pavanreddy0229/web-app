@@ -12,8 +12,8 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh '''cd terraform-config && terraform init'''
-                sh '''cd terraform-config && terraform plan'''
+                sh '''cd terraform-config/environments/build && terraform init'''
+                sh '''cd terraform-config/environments/build && terraform plan'''
             }
         }
 		stage('Test') {
