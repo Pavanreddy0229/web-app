@@ -12,8 +12,8 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh '''cd terraform-config/environments/build && terraform init'''
-                sh '''cd terraform-config/environments/build && terraform plan'''
+                sh '''cd terraform-config && terraform init'''
+                sh '''cd terraform-config && terraform plan'''
             }
         }
 		stage('Test') {
@@ -25,9 +25,9 @@ pipeline {
         }
         stage('Deploy to staging') {		
             steps {
-                sh '''cd terraform-config/environments/staging && terraform init'''
-                sh '''cd terraform-config/environments/staging && terraform plan'''
-                sh '''cd terraform-config/environments/staging && terraform apply -auto-approve'''
+                //sh '''cd terraform-config/environments/staging && terraform init'''
+                //sh '''cd terraform-config/environments/staging && terraform plan'''
+                sh '''cd terraform-config && terraform apply -auto-approve'''
             }
         }
          stage('Deploy to production') {
