@@ -297,12 +297,12 @@ egress {
 
 data "local_file" "ami_id"{
   depends_on = [null_resource.ami_id]     #wait for lc to be created by terraform
-  filename = "/home/ubuntu/aws-pfp/ami.txt"
+  filename = "../ami.txt"
 }
 
 resource "null_resource" "ami_id" {
   triggers = {
-    ami_id = "{/home/ubuntu/aws-pfp/ami.txt}"
+    ami_id = "{../ami.txt}"
   }
 }
 
