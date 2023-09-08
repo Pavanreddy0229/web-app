@@ -1,8 +1,5 @@
 pipeline {
     agent any
-    environment{
-        AWS_REGION = 'us-west-1'
-    }
     triggers {
        // poll repo every minute for changes
        pollSCM('* * * * *')

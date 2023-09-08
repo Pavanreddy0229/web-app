@@ -1,10 +1,13 @@
 - name: Create EC2 Instance in New VPC
   hosts: localhost
   gather_facts: False
+
+  vars_files:
+    - vars.yml
   vars:
     aws_region: "{{ lookup('env', 'AWS_REGION') }}"
     instance_type: "t3.micro"
-    ami_id: "ami-0f8e81a3da6e2510a"
+    ami_id: "{{ami_ids[aws_region]}}"
 
   tasks:
     - name: Create VPC
