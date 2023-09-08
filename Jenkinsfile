@@ -25,7 +25,9 @@ pipeline {
         }
         stage('Deploy to staging') {		
             steps {
-                sh '''cd terraform-config/environments/staging && terraform apply -auto-approve && terraform destroy -auto-approve'''
+                sh '''cd terraform-config/environments/staging && terraform init'''
+                sh '''cd terraform-config/environments/staging && terraform plan'''
+                sh '''cd terraform-config/environments/staging && terraform apply -auto-approve'''
             }
         }
          stage('Deploy to production') {
@@ -33,6 +35,8 @@ pipeline {
 			    withEnv(["AWS_REGION=us-west-2"]) {
 					sh '''cd ansible/roles && ansible-playbook ami.yml'''
 				}
+                sh '''cd terraform-config/environments/prod && terraform init'''
+                sh '''cd terraform-config/environments/prod && terraform plan'''
                 sh '''cd terraform-config/environments/prod && terraform apply -auto-approve && terraform destroy -auto-approve'''
             }
         } 
