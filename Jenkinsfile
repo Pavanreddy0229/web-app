@@ -16,13 +16,13 @@ pipeline {
                 sh '''cd terraform-config && terraform plan'''
             }
         }
-		stage('Test') {
-            steps {
-			    withEnv(["AWS_REGION=us-west-1"]) {
-					sh '''cd ansible/roles && ansible-playbook ami.yml'''
-				}
-            }
-        }
+		// stage('Test') {
+        //     steps {
+		// 	    withEnv(["AWS_REGION=us-west-1"]) {
+		// 			sh '''cd ansible/roles && ansible-playbook ami.yml'''
+		// 		}
+        //     }
+        // }
         stage('Deploy to staging') {		
             steps {
                 //sh '''cd terraform-config/environments/staging && terraform init'''
