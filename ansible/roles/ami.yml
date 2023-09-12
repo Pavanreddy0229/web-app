@@ -156,8 +156,8 @@
         content: "{{ami_info.image_id}}"
         dest: ../../ami.txt
 
-    # - name: Terminate ec2 Instance
-    #   ec2_instance:
-    #     instance_ids: "{{ec2_instance.instance_ids}}"
-    #     state: "absent"
+    - name: Terminate ec2 Instance
+      ec2_instance:
+        instance_ids: "{{ec2_instance.instance_ids}}"
+        state: "absent"
 
