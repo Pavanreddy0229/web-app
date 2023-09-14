@@ -180,7 +180,7 @@ resource "aws_route_table" "prv_sub1_rt" {
   route {
     cidr_block     = "0.0.0.0/0"
     nat_gateway_id = aws_nat_gateway.natgateway_1[count.index].id
-    gateway_id    = aws_internet_gateway.igw.id
+    # gateway_id    = aws_internet_gateway.igw.id
   }
 #   tags = {
 #     Project = "pfp_demo"
@@ -204,7 +204,7 @@ resource "aws_route_table" "prv_sub2_rt" {
   route {
     cidr_block     = "0.0.0.0/0"
     nat_gateway_id = aws_nat_gateway.natgateway_2[count.index].id
-    gateway_id    = aws_internet_gateway.igw.id
+    # gateway_id    = aws_internet_gateway.igw.id
   }
   # tags = {
   #   Project = "pfp_demo"
