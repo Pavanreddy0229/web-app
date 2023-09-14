@@ -1,9 +1,9 @@
 #terraform backend
 terraform{
   backend "s3" {
-    bucket  = "pfp-s3bucket"
+    bucket  = "pfp-s3bucket-prod"
     key     = "my_terraform_pfp_prod"
-    region  = "us-west-1"
+    region  = "us-west-2"
   } 
 }
 # Configure the AWS Provider
@@ -320,6 +320,11 @@ resource "aws_launch_configuration" "webserver-launch-config" {
             volume_size = 10
             encrypted   = true
         }
+
+    user_data = <<-EOF
+              #!/bin/bash
+              node /home/ubuntu/nodejs-app/index.js
+              EOF
 
   lifecycle {
     create_before_destroy = true

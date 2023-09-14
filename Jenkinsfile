@@ -37,7 +37,7 @@ pipeline {
 				}
                 sh '''cd terraform-config/environments/prod && terraform init'''
                 sh '''cd terraform-config/environments/prod && terraform plan'''
-                sh '''cd terraform-config/environments/prod && terraform apply -auto-approve && terraform destroy -auto-approve'''
+                sh '''cd terraform-config/environments/prod && terraform apply -auto-approve'''
             }
         } 
     }

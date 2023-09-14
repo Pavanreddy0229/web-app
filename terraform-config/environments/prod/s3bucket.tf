@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "pfp-s3" {
-  bucket = "pfp-s3bucket"
+  bucket = "pfp-s3bucket-prod"
   acl    = "private"
   lifecycle {
     prevent_destroy  = false
@@ -10,9 +10,9 @@ resource "aws_s3_bucket" "pfp-s3" {
   }
 
   tags = {
-    Name        = "pfp-s3bucket"
+    Name        = "pfp-s3bucket-prod"
     description = "to store terraform state file"
-    Environment = "Dev"
+    Environment = "prod"
   }
 }
 
