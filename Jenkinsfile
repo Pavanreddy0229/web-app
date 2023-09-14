@@ -35,7 +35,7 @@ pipeline {
 			    withEnv(["AWS_REGION=us-west-2"]) {
 					sh '''cd ansible/roles && ansible-playbook ami.yml'''
 				}
-                sh '''cd terraform-config/environments/prod && terraform init'''
+                sh '''cd terraform-config/environments/prod && terraform init -reconfigure'''
                 sh '''cd terraform-config/environments/prod && terraform plan'''
                 sh '''cd terraform-config/environments/prod && terraform apply -auto-approve'''
             }
