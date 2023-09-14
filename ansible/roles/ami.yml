@@ -5,8 +5,8 @@
   vars_files:
     - vars.yml
   vars:
-    # aws_region: "{{ lookup('env', 'AWS_REGION') }}"
-    aws_region: "us-west-1"
+    aws_region: "{{ lookup('env', 'AWS_REGION') }}"
+    # aws_region: "us-west-1"
     instance_type: "t3.micro"
     ami_id: "{{ami_ids[aws_region]}}"
 
