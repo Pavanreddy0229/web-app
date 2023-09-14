@@ -27,7 +27,7 @@ pipeline {
             steps {
                 //sh '''cd terraform-config/environments/staging && terraform init'''
                 //sh '''cd terraform-config/environments/staging && terraform plan'''
-                sh '''cd terraform-config && terraform apply -auto-approve && terraform destroy -auto-approve'''
+                sh '''cd terraform-config && terraform apply -auto-approve'''
             }
         }
         //  stage('Deploy to production') {

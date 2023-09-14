@@ -2,8 +2,8 @@
 terraform{
   backend "s3" {
     bucket  = "pfp-s3bucket"
-    key     = "my_terraform_pfp"
-    region  = "us-west-2"
+    key     = "my_terraform_pfp_prod"
+    region  = "us-west-1"
   } 
 }
 # Configure the AWS Provider
